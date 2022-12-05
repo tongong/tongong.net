@@ -1,0 +1,37 @@
+:root {
+    --b-txt: #afbac4;
+    --b-bg-1: #242930;
+    --b-bg-2: #353b43;
+    --b-line: #afbac4;
+    --b-link: #57cc8a;
+    --b-btn-bg: #353b43;
+    --b-btn-txt: #afbac4;
+    --b-focus: #88c0d0;
+}
+
+h1 {
+    text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+}
+
+p {
+    text-align: justify;
+}
+
+a {
+    cursor: pointer;
+}
+
+.page-header {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.page-intro {
+    text-align: center;
+    font-style: italic;
+}
