@@ -26,14 +26,8 @@ const main = () => {
     return {
         view: (vnode) => m("div",
             m("h1", "zoom interference"),
-            m("p", {
-                style: {
-                    textAlign: "center",
-                    fontStyle: "italic",
-                },
-            }, `a playful exploration into the world of image rendering. by `,
-                m("a", {href: "https://github.com/tongong"}, "@tongong"),
-                `, 2022`
+            m("p.page-intro",
+                `A playful exploration into the world of image rendering.`
             ),
             m("p", `I recently discovered that pixel interference effects can
                 occur by zooming in on gray image areas. This got me thinking:
@@ -304,7 +298,7 @@ const main = () => {
                 yourself. I respect your privacy - All images are processed
                 client-side.`),
             m(custom_file_upload),
-            m("h2", "Todo"),
+            m("h2", "todo"),
             zoom_button("test", 0.5), `, `,
             zoom_button("test", 1), `, `,
             m("p", `do not force square images`),
@@ -313,14 +307,12 @@ const main = () => {
             m("h2", "future ideas"),
             m("p", `different images on different scales?`),
             m("p", `more browser tests to really understand the different renderings`),
-            m("h2", "Thank you..."),
+            m("h2", "thank you..."),
             m("ul",
                 m("li", "... ",
                     m("a", {href: "https://mithril.js.org/"}, "mithril.js"),
-                    " and ",
-                    m("a", {href: "https://github.com/rilwis/bamboo"}, "bamboo"),
-                    ` for keeping the fun in this project by abstracting away
-                    the Javascript DOM API and CSS`,
+                    ` for keeping the fun in this project by abstracting over
+                    the Javascript DOM API`,
                 ),
                 m("li", "... ",
                     m("a", {href: "https://ciechanow.ski/"}, "Bartosz Ciechanowski"),
@@ -333,4 +325,4 @@ const main = () => {
     };
 };
 
-m.mount(document.body, main);
+m.mount(document.getElementById("container"), main);
