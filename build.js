@@ -37,6 +37,7 @@ function get_pages(entry_path) {
             } else if (is_file(e) && e.endsWith("/index.html")) {
                 return [e];
             }
+            return [];
         });
 }
 
