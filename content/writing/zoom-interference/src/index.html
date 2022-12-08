@@ -1,3 +1,224 @@
 <link rel="stylesheet" href="./styles.css"/>
-<div id="container"></div>
+
+
+<h1>zoom interference</h1>
+<p class="page-intro">
+    A playful exploration into the world of image rendering.
+</p>
+<p>
+    I recently discovered that pixel interference effects can occur by zooming
+    in on gray image areas. This got me thinking: Can we construct an image
+    that initially looks uniformly gray but reveals information on specific
+    zoom levels? Is it maybe even possible to show different grayscale images
+    depending on the zoom level?
+</p>
+<p>
+    The following tests show client-side generated images using the
+    <code>&lt;canvas&gt;</code> element. However the image data is not manipulated
+    during zoom - just the CSS <code>transform: scale()</code> property changes.
+    The demos need pixel perfect sizes to work. Therefore the images can be too
+    small or too big on some devices - I apologize.
+</p>
+<p>
+    Please also note that I do not have any prior knowledge in the field of
+    image rendering. I was just playing around and documenting things I found
+    interesting. I hope you find this little tour interesting as well :).
+</p>
+
+
+<h2>the interference effect</h2>
+<p>
+    The first image is just a checkerboard pattern on pixel scale (this is
+    clearly visible on <a class="demo1-checker">2x</a>). When zooming in the
+    image pixel grid and the screen pixel grid are misaligned creating
+    interference effects in both dimensions. They are especially strong in the
+    area of
+    <a class="demo1-checker">0.5x</a>,
+    <a class="demo1-checker">0.25x</a>,
+    <a class="demo1-checker">0.1667x</a> and
+    <a class="demo1-checker">0.125x</a>.
+    These turn out to be the whole number parts of 1/2. This makes sense: For
+    two adjacent screen pixels the distance of the image pixels is a multiple
+    of 2 which locally creates a uniformly colored area.
+</p>
+<!-- demo1-checker -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    Another observation about browser differences can be made here: In Chromium
+    I can zoom smoothly at this microscopic scale, Firefox only allows zoom
+    steps. Interestingly for every zoom step the image size is an integer
+    multiple of 1/2 of the interference period. I do not know why. Also on
+    Firefox for Android there are graphic glitches across the whole screen for
+    some zoom levels. I guess this is a graphics driver issue of my device but
+    I am not sure.
+</p>
+<p>
+    On Chromium the image is completely black on some zoom levels like
+    <a class="demo1-checker">0.5x</a>. However this bug does not occur when
+    opening the image in a new tab and zooming to
+    <a class="demo1-checker">0.5x</a>.
+</p>
+<p>
+    For the second test I inverted the checkerboard pattern for some areas of
+    the image. There are zoom levels like <a class="demo2-checkerinvert">1x</a>
+    where just parts of the border of the shape are visible. For other zoom
+    levels like <a clas="demo2-checkerinvert">0.5x</a> the whole shape area is
+    clearly visible.
+</p>
+<!-- demo2-checkerinvert -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+
+
+<h2>other types of colorings</h2>
+<p>
+    Let's explore some other types of local colorings. I chose uniform gray and
+    random pixel values for the next demo. As expected the gray area does not
+    show any interference effects at all. The random area on the other hand has
+    them but they are hardly visible. You can see them if you keep the rough
+    slider at <a class="demo3-grayrandom">1x</a> and just move the fine slider.
+</p>
+<!-- demo3-grayrandom -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    Now let's combine different types of colorings. The random noise seems too
+    different but a combination of checkerboard and gray could work. It does in
+    fact: For <a class="demo4-checkergray">0.999x</a> the difference is just
+    barely visible on Firefox and invisible on Chromium.
+</p>
+<!-- demo4-checkergray -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    To hide the remaining interference artefacts we bring the random noise back
+    and add it to our color values. Now things start to get really interesting.
+    Let's just look at the zoom levels
+    <a class="demo5-checkergrayrandom">0.999x</a> and
+    <a class="demo5-checkergrayrandom">0.5x</a> for the next two demos.
+</p>
+<p>
+    On <a class="demo5-checkergrayrandom">0.5x</a> the square is sometimes
+    visible and sometimes invisible. After a bit of testing I found out that it
+    depends on the parity of the image width. I cannot explain it but I also do
+    not find it implausible that these interference effects change drastically
+    on size parity.
+</p>
+<p>
+    The real weirdness starts on <a class="demo5-checkergrayrandom">0.999x</a>.
+    On Firefox the square is visible for images smaller or equal to 500px in
+    size and invisible for larger ones. I suppose Firefox uses different
+    rendering techniques for different image sizes. On Chrome the square is
+    visible if and only if it is also visible on
+    <a class="demo5-checkergrayrandom">1x</a>
+    - this means visible for even image sizes and invisible for odd sizes.
+</p>
+<!-- demo5-checkergrayrandom -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<!-- demo5-checkergrayrandom -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+
+
+<h2>invisibility on 1x</h2>
+<p>
+    It would be really cool to create an image that is invisible on <a>1x</a>
+    but arises on zoom. This did already work but just in Chromium. My first
+    idea for this was to hide the interference area in a random area and match
+    the grayscale level:
+</p>
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    This does work on Firefox on my specific screen. The difference is however
+    visible in other browsers and on Firefox on other devices.
+</p>
+<p>
+    To create a truly invisible interference area my next idea was to rearrange
+    the pixels according to their color. This ensures equal color distribution
+    inside and outside the interference area. It is however rather complicated
+    to implement. The same effect can be achieved with random colors using
+    uneven probabilities. For a dark pixel on the checkerboard we generate two
+    random color values and take the smaller one. This is equivalent to
+    imagining a neighboring light pixel and swapping their values if necessary.
+</p>
+<p>
+    Now the effect really works consistent across devices and screens! Try
+    zooming to <a class="demo6-reordering">0.5x</a> for example.
+</p>
+<!-- demo6-reordering -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    Now if we think in terms of probability distributions this process can be
+    easily generalized from hidden black-and-white to grayscale images. Try the
+    following example on <a class="demo7-reordering-grayscale">0.5x</a>
+    Unfortunately the interference patterns are only clearly visible in the
+    center of the image as you can see at the end of the paint brush. (This is
+    sometimes not the case on Chromium.)
+</p>
+<!-- demo7-reordering-grayscale -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    It would be really cool if the whole area could be used for hidden images.
+    However i think that is impossible. There are always spots of destructive
+    interference and for <a class"demo7-reordering-grayscale">0.5x</a> and its
+    whole number parts these spots are already at the border of the image.
+</p>
+<p>
+    Using the following file picker you can try the effect yourself. I respect
+    your privacy - All images are processed client-side. (You can check that in
+    the network tab in the debugging tools of your browser.
+</p>
+<!-- custom file upload -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+
+
+<h2>todo</h2>
+<ul>
+    <li>do not force square images</li>
+    <li>Does this work for colored images?</li>
+    <li>add source code link</li>
+</ul>
+
+<h2>future ideas</h2>
+<ul>
+    <li>different images on different scales?</li>
+    <li>more browser tests to really understand the different renderings</li>
+</ul>
+
+
+<h2>thank you...</h2>
+<ul>
+    <li>... <a href="https://mithril.js.org/">mithril.js</a> for keeping the
+        fun in this project by abstracting over the Javascript DOM API</li>
+    <li>... <a href="https://ciechanow.ski/">Bartosz Ciechanowski</a> for being
+        a great inspiration</li>
+    <li>... for reading :)</li>
+</ul>
+
 <script src="./main.js"></script>

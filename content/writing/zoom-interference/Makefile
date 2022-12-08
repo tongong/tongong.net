@@ -3,4 +3,4 @@ build: src/*
 	tacker src/index.html index.html
 
 watch:
-	find . | entr -s "make build"
+	find . | entr -s "make build && cd ../../.. && make"
