@@ -16,7 +16,7 @@
     The following tests show client-side generated images using the
     <code>&lt;canvas&gt;</code> element. However the image data is not manipulated
     during zoom - just the CSS <code>transform: scale()</code> property changes.
-    The demos need pixel perfect sizes to work. Therefore the images can be too
+    The demos need pixel perfect sizes to work. Therefore the images could be too
     small or too big on some devices - I apologize.
 </p>
 <p>
@@ -65,7 +65,7 @@
     For the second test I inverted the checkerboard pattern for some areas of
     the image. There are zoom levels like <a class="demo2-checkerinvert">1x</a>
     where just parts of the border of the shape are visible. For other zoom
-    levels like <a clas="demo2-checkerinvert">0.5x</a> the whole shape area is
+    levels like <a class="demo2-checkerinvert">0.5x</a> the whole shape area is
     clearly visible.
 </p>
 <!-- demo2-checkerinvert -->
@@ -89,10 +89,10 @@
     Javascript.]
 </div>
 <p>
-    Now let's combine different types of colorings. The random noise seems too
-    different but a combination of checkerboard and gray could work. It does in
-    fact: For <a class="demo4-checkergray">0.999x</a> the difference is just
-    barely visible on Firefox and invisible on Chromium.
+    Now let's combine different types of colorings. The random noise seems to
+    be too different but a combination of checkerboard and gray could work. It
+    does in fact: For <a class="demo4-checkergray">0.999x</a> the difference is
+    just barely visible on Firefox and invisible on Chromium.
 </p>
 <!-- demo4-checkergray -->
 <div class="js-container">
@@ -100,7 +100,7 @@
     Javascript.]
 </div>
 <p>
-    To hide the remaining interference artefacts we bring the random noise back
+    To hide the remaining interference artifacts we bring the random noise back
     and add it to our color values. Now things start to get really interesting.
     Let's just look at the zoom levels
     <a class="demo5-checkergrayrandom">0.999x</a> and
@@ -120,7 +120,8 @@
     rendering techniques for different image sizes. On Chrome the square is
     visible if and only if it is also visible on
     <a class="demo5-checkergrayrandom">1x</a>
-    - this means visible for even image sizes and invisible for odd sizes.
+    - this means it is visible for even image sizes and invisible for odd
+    sizes.
 </p>
 <!-- demo5-checkergrayrandom -->
 <div class="js-container">
@@ -137,7 +138,7 @@
 <h2>invisibility on 1x</h2>
 <p>
     It would be really cool to create an image that is invisible on <a>1x</a>
-    but arises on zoom. This did already work but just in Chromium. My first
+    but appears on zoom. This did already work but just in Chromium. My first
     idea for this was to hide the interference area in a random area and match
     the grayscale level:
 </p>
@@ -170,7 +171,7 @@
 <p>
     Now if we think in terms of probability distributions this process can be
     easily generalized from hidden black-and-white to grayscale images. Try the
-    following example on <a class="demo7-reordering-grayscale">0.5x</a>
+    following example on <a class="demo7-reordering-grayscale">0.5x</a>.
     Unfortunately the interference patterns are only clearly visible in the
     center of the image as you can see at the end of the paint brush. (This is
     sometimes not the case on Chromium.)
@@ -183,13 +184,15 @@
 <p>
     It would be really cool if the whole area could be used for hidden images.
     However i think that is impossible. There are always spots of destructive
-    interference and for <a class"demo7-reordering-grayscale">0.5x</a> and its
+    interference and for <a class="demo7-reordering-grayscale">0.5x</a> and its
     whole number parts these spots are already at the border of the image.
 </p>
 <p>
     Using the following file picker you can try the effect yourself. I respect
-    your privacy - All images are processed client-side. (You can check that in
-    the network tab in the debugging tools of your browser.
+    your privacy so all images are processed client-side. You can check that in
+    the network tab in the debugging tools of your browser. Please choose a
+    square image - implementing and exploring other aspect ratios is left as an
+    idea to the reader.
 </p>
 <!-- custom file upload -->
 <div class="js-container">
@@ -198,18 +201,46 @@
 </div>
 
 
-<h2>todo</h2>
-<ul>
-    <li>do not force square images</li>
-    <li>Does this work for colored images?</li>
-    <li>add source code link</li>
-</ul>
+<h2>colored images</h2>
+<p>
+    Since RGB displays have separate LEDs for the three color components this
+    process should be easily generalizable to color images by just repeating it
+    three times per pixel. It works, indeed:
+    (try <a class="demo8-color">0.5x</a>)
+</p>
 
-<h2>future ideas</h2>
+<!-- demo8-color -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+<p>
+    As above, you can try it yourself:
+</p>
+<!-- custom file upload 2 -->
+<div class="js-container">
+    [If you see this text your browser unfortunately does not support
+    Javascript.]
+</div>
+
+
+<h2>ideas for future exploration</h2>
+<p>
+    Many questions are left unanswered in this text. I chose to highlight some
+    of them:
+</p>
 <ul>
-    <li>different images on different scales?</li>
-    <li>more browser tests to really understand the different renderings</li>
+    <li>What happens on aspect ratios different from 1:1?</li>
+    <li>Is it possible to show different images on different zoom levels?
+        If so, how?</li>
+    <li>How can these phenomena be explained? Maybe explanations can be found
+        in the source code of Firefox/Chromium or image rendering libraries.
+        This is unfortunately beyond my abilities.</li>
 </ul>
+<p>
+    That's enough for my curiosity. If you are still curious you can find the
+    source code of this page <a href="">here</a>.
+</p>
 
 
 <h2>thank you...</h2>

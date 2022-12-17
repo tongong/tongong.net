@@ -3,7 +3,8 @@ const stream = require("lib/mithril-stream");
 const zimg = require("./zoomimg.js");
 const custom_file_upload = require("./custom_file.js");
 
-const gimpdata = require("data/data.js").gimp;
+const example_graydata = require("data/data.js").example_grayscale;
+const example_colordata = require("data/data.js").example_color;
 
 function base64_to_img(txt) {
     const img = new Image();
@@ -82,7 +83,7 @@ const components = [
         update: zoom_stream("demo5-checkergrayrandom"),
     })},
     {view: (vnode) => m(zimg, {
-        size: 401,
+        size: 400,
         image: (x, y) => {
             return 0.3 <= x && x < 0.7 && 0.3 <= y && y < 0.7;
         },
@@ -135,7 +136,7 @@ const components = [
         //     if (x < 0.5) return 0.3 <= x && 0.3 <= y && y < 0.7;
         //     return 1 - y;
         // },
-        image: base64_to_img(gimpdata),
+        image: base64_to_img(example_graydata),
         noise: (x, y, val) => {
             val = val[0] / 256;
             // val: input color; 0 <= val < 1
@@ -167,7 +168,26 @@ const components = [
         },
         update: zoom_stream("demo7-reordering-grayscale"),
     })},
-    {view: (vnode) => m(custom_file_upload)},
+    {view: (vnode) => m(custom_file_upload, {color: false})},
+    {view: (vnode) => m(zimg, {
+        size: 601,
+        image: base64_to_img(example_colordata),
+        noise: (x, y, val) => {
+            return val.map(valc => {
+                valc = valc / 256;
+                let color = 128;
+                const RAND = 100;
+                let xp = Math.random();
+                let yp = Math.random();
+                if ((x + y + 1) % 2 == 0 != yp < (1-2*valc)*xp+valc) {
+                    xp = 1 - xp;
+                }
+                return color - RAND + xp * 2 * RAND;
+            });
+        },
+        update: zoom_stream("demo8-color"),
+    })},
+    {view: (vnode) => m(custom_file_upload, {color: true})},
 ];
 
 Array.from(document.querySelectorAll("div.js-container")).forEach((c, i) => {

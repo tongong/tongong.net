@@ -7,6 +7,34 @@ function blob_to_img(blob) {
     return img;
 }
 
+let noise_grayscale = (x, y, val) => {
+    val = (0.3 * val[0] + 0.6 * val[1] + 0.1 * val[2])/ 256;
+    // val: input color; 0 <= val < 1
+    let color = 128;
+    const RAND = 100;
+    let xp = Math.random();
+    let yp = Math.random();
+    if ((x + y + 1) % 2 == 0 != yp < (1-2*val)*xp+val) {
+        xp = 1 - xp;
+    }
+    color = color - RAND + xp * 2 * RAND;
+    return [color, color, color];
+};
+
+let noise_color = (x, y, val) =>
+    val.map(valc => {
+        valc = valc / 256;
+        let color = 128;
+        const RAND = 100;
+        let xp = Math.random();
+        let yp = Math.random();
+        if ((x + y + 1) % 2 == 0 != yp < (1-2*valc)*xp+valc) {
+            xp = 1 - xp;
+        }
+        return color - RAND + xp * 2 * RAND;
+    });
+
+
 module.exports = () => {
     let image_elem_destroyed = true;
     let image_size;
@@ -44,19 +72,7 @@ module.exports = () => {
             image_elem_destroyed? "" : m(zimg, {
                 size: image_size,
                 image: image_tag,
-                noise: (x, y, val) => {
-                    val = (0.3 * val[0] + 0.6 * val[1] + 0.1 * val[2])/ 256;
-                    // val: input color; 0 <= val < 1
-                    let color = 128;
-                    const RAND = 100;
-                    let xp = Math.random();
-                    let yp = Math.random();
-                    if ((x + y + 1) % 2 == 0 != yp < (1-2*val)*xp+val) {
-                        xp = 1 - xp;
-                    }
-                    color = color - RAND + xp * 2 * RAND;
-                    return [color, color, color];
-                },
+                noise: vnode.attrs.color? noise_color : noise_grayscale,
             }),
         )
     };
