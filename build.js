@@ -42,7 +42,7 @@ function get_pages(entry_path) {
 }
 
 // list of paths
-const pages = get_pages("content");
+const pages = [...get_pages("content"), "content/404.html"];
 
 const template = std.loadFile("template/dist/index.html");
 
