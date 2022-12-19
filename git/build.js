@@ -44,6 +44,15 @@ fs.writeFileSync("dist/index.html",
 
 // include dist in website dist
 // tacker is used to include logo.png and style.css
+// tacker outputs are cached for speed, known files are saved in
+// tacker-cache.json
+function sha256(filepath) {
+    return child_process.execSync("sha256sum \"" + filepath + "\"")
+        .toString().slice(0, -1);
+}
+// array of known hash-filename combinations
+let cached = fs.existsSync("tacker-cache.json")?
+    JSON.parse(fs.readFileSync("tacker-cache.json").toString()) : [];
 child_process.execSync("find dist -name *.html")
     .toString().split("\n").filter(f => f != "").map(f => {
         // tacker base path
@@ -51,10 +60,14 @@ child_process.execSync("find dist -name *.html")
             f.split("/").slice(0, 2).join("/");
         const distpath = f.replace("dist/", "../dist/git/");
         const distparent = distpath.split("/").slice(0, -1).join("/");
-        fs.mkdirSync(distparent, {recursive: true});
-        child_process.execSync("tacker -p \"" + basepath
-            + "\" \"" + f + "\" \"" + distpath + "\"");
+        if (!cached.includes(sha256(f))) {
+            fs.mkdirSync(distparent, {recursive: true});
+            child_process.execSync("tacker -p \"" + basepath
+                + "\" \"" + f + "\" \"" + distpath + "\"");
+            cached.push(sha256(f));
+        }
     });
+fs.writeFileSync("tacker-cache.json", JSON.stringify(cached));
 
 // create directories for git https clone
 repositories.forEach(r => {
