@@ -6,11 +6,16 @@ const custom_file_upload = require("./custom_file.js");
 const example_graydata = require("data/data.js").example_grayscale;
 const example_colordata = require("data/data.js").example_color;
 
-function base64_to_img(txt) {
-    const img = new Image();
-    img.src = "data:;base64," + txt;
-    return img;
+async function base64_to_img(txt) {
+    return new Promise((res, rej) => {
+        const img = new Image();
+        img.src = "data:;base64," + txt;
+        img.addEventListener("load", () => res(img));
+    });
 }
+
+const img_color = await base64_to_img(example_colordata);
+const img_gray = await base64_to_img(example_graydata);
 
 // store all update streams in a container to avoid having a pile of local
 // variables
@@ -136,7 +141,7 @@ const components = [
         //     if (x < 0.5) return 0.3 <= x && 0.3 <= y && y < 0.7;
         //     return 1 - y;
         // },
-        image: base64_to_img(example_graydata),
+        image: img_gray,
         noise: (x, y, val) => {
             val = val[0] / 256;
             // val: input color; 0 <= val < 1
@@ -171,7 +176,7 @@ const components = [
     {view: (vnode) => m(custom_file_upload, {color: false})},
     {view: (vnode) => m(zimg, {
         size: 601,
-        image: base64_to_img(example_colordata),
+        image: img_color,
         noise: (x, y, val) => {
             return val.map(valc => {
                 valc = valc / 256;
